@@ -4,8 +4,10 @@ import GoogleProvider from "next-auth/providers/google";
 import User from "@models/user";
 import { connectToDB } from "@utils/database";
 
+// Configuration for NextAuth
 const handler = NextAuth({
   providers: [
+    // Google authentication provider
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -13,7 +15,7 @@ const handler = NextAuth({
   ],
   callbacks: {
     async session({ session }) {
-      // store the user id from MongoDB to session
+      // Store the user id from MongoDB to the session object
       const sessionUser = await User.findOne({ email: session.user.email });
       session.user.id = sessionUser._id.toString();
 
@@ -21,12 +23,13 @@ const handler = NextAuth({
     },
     async signIn({ profile }) {
       try {
+        // Connect to the database
         await connectToDB();
 
-        // check if a user already exists
+        // Check if a user already exists
         const userExists = await User.findOne({ email: profile.email });
 
-        // if not, create a new user
+        // If the user does not exist, create a new user
         if (!userExists) {
           await User.create({
             email: profile.email,
@@ -44,4 +47,5 @@ const handler = NextAuth({
   },
 });
 
+// Exporting the NextAuth configuration handler
 export { handler as GET, handler as POST };

@@ -6,16 +6,16 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 
 const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
-  const { data: session } = useSession();
-  const pathName = usePathname();
-  const router = useRouter();
+  const { data: session } = useSession(); // Variable indicating whether the user is logged in or not
+  const pathName = usePathname(); // Get the current pathname from the navigation
+  const router = useRouter(); // Router object for programmatic navigation
 
-  const [copied, setCopied] = useState("");
+  const [copied, setCopied] = useState(""); // State variable to track if the prompt has been copied to the clipboard
 
   const handleCopy = () => {
     setCopied(post.prompt);
-    navigator.clipboard.writeText(post.prompt);
-    setTimeout(() => setCopied(""), 3000);
+    navigator.clipboard.writeText(post.prompt); // Copy the prompt text to the clipboard
+    setTimeout(() => setCopied(""), 3000); // Clear the copied state after 3 seconds
   };
 
   return (

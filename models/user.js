@@ -1,5 +1,6 @@
 import { Schema, model, models } from "mongoose";
 
+// Define the schema for the User model
 const UserSchema = new Schema({
   email: {
     type: String,
@@ -19,6 +20,8 @@ const UserSchema = new Schema({
   },
 });
 
+// Check if the User model already exists in the models cache,
+// otherwise create a new model using the UserSchema
 const User = models.User || model("User", UserSchema);
 
 export default User;

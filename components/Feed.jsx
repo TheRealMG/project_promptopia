@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 
 import PromptCard from "./PromptCard";
 
+// Component for rendering a list of prompt cards
 const PromptCardList = ({ data, handleTagClick }) => {
   return (
     <div className="mt-16 prompt_layout">
@@ -19,13 +20,14 @@ const PromptCardList = ({ data, handleTagClick }) => {
 };
 
 const Feed = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]); // State for storing the fetched prompt data
 
   // Search states
-  const [searchText, setSearchText] = useState("");
-  const [searchTimeout, setSearchTimeout] = useState(null);
-  const [searchedResults, setSearchedResults] = useState([]);
+  const [searchText, setSearchText] = useState(""); // State for storing the search input value
+  const [searchTimeout, setSearchTimeout] = useState(null); // State for storing the search debounce timer
+  const [searchedResults, setSearchedResults] = useState([]); // State for storing the filtered search results
 
+   // Fetches the prompt data from the API
   const fetchPosts = async () => {
     const response = await fetch("/api/prompt");
     const data = await response.json();
@@ -34,9 +36,10 @@ const Feed = () => {
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts(); // Fetch the prompt data when the component mounts
   }, []);
 
+  // Filters the prompts based on the search text
   const filterPrompts = (searchText) => {
     const regex = new RegExp(searchText, "i"); // 'i' flag for case-insensitive search
     return posts.filter(
@@ -47,11 +50,12 @@ const Feed = () => {
     );
   };
 
+  // Handles the change event of the search input
   const handleSearchChange = (e) => {
     clearTimeout(searchTimeout);
     setSearchText(e.target.value);
 
-    // debounce method
+    // Debounce method to delay search execution
     setSearchTimeout(
       setTimeout(() => {
         const searchResult = filterPrompts(e.target.value);
@@ -60,6 +64,7 @@ const Feed = () => {
     );
   };
 
+  // Handles the click event of a tag
   const handleTagClick = (tagName) => {
     setSearchText(tagName);
 
@@ -80,7 +85,7 @@ const Feed = () => {
         />
       </form>
 
-      {/* All Prompts */}
+      {/* Renders the prompt card list based on whether a search is performed */}
       {searchText ? (
         <PromptCardList
           data={searchedResults}
